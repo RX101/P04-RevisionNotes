@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,13 +24,6 @@ public class MainActivity extends AppCompatActivity {
         btnInsert = (Button)findViewById(R.id.buttonInsertNote);
         btnShowList =(Button)findViewById(R.id.buttonShowList);
 
-        // Get the RadioGroup object
-        RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroupStars);
-        // Get the Id of the selected radio button in the RadioGroup
-        int selectedButtonId = rg.getCheckedRadioButtonId();
-        // Get the radio button object from the Id we had gotten above
-        final RadioButton rb = (RadioButton) findViewById(selectedButtonId);
-
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,9 +31,18 @@ public class MainActivity extends AppCompatActivity {
                 // activity's Context
                 DBHelper db = new DBHelper(MainActivity.this);
                 String content  = etNote.getText().toString();
+                // Get the RadioGroup object
+                RadioGroup rg = (RadioGroup) findViewById(R.id.radioGroupStars);
+                // Get the Id of the selected radio button in the RadioGroup
+                int selectedButtonId = rg.getCheckedRadioButtonId();
+                // Get the radio button object from the Id we had gotten above
+                RadioButton rb = (RadioButton) findViewById(selectedButtonId);
                 int selectedRB = Integer.parseInt(rb.getText().toString());
                 // Insert a task
                 db.insertNote(content,selectedRB);
+                Toast.makeText(MainActivity.this, "Inserted", Toast.LENGTH_SHORT).show();
+                etNote.setText("");
+                rg.check(0);
                 db.close();
             }
         });
